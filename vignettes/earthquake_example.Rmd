@@ -1,0 +1,71 @@
+---
+title: "Examples of plotting earthquake data"
+author: "Matthew R. MacLeod"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Examples of plotting earthquake data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r global_options}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
+This will quickly demonstrate how the earthquake data can be used.
+
+## Reading in data
+
+Earthquake data obtained from the NOAA significant earthquake database (https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1) can be read in and prepared using the eq_clean_data function as per below.  Note that read_tsv() was used rather than read_delim("signif.txt", delim = "\t"), as the latter seemed to not parse the column types correctly.
+
+```{r}
+cleanData <- read_tsv("signif.txt") %>% eq_clean_data()
+```
+
+## Plotting a timeline without labels
+
+Given that clean data has been read in, a basic earthquake timeline can be plotted as per the code below:
+
+```{r}
+cleanData %>%
+  ggplot(aes(x = DATE, size=EQ_PRIMARY, fill = DEATHS, label = LOCATION_NAME)) +
+  geom_timeline(alpha = 0.25, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) +
+  geom_timeline_label(nmax = 10, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) +
+  guides(size = guide_legend(title = "Richter scale value"), fill = guide_colourbar(title = "# Deaths")) +
+  theme_quakes()
+```
+
+
+## Plotting a timeline with labels
+
+A timeline containing labels, as well as multiple country timelines, can then be plotted as follows:
+
+```{r}
+cleanData %>%  filter(COUNTRY %in% c('USA', 'CHINA')) %>%
+  ggplot(aes(x = DATE, y = COUNTRY, size=EQ_PRIMARY, fill = DEATHS, label = LOCATION_NAME)) +
+  geom_timeline(alpha = 0.25, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) +
+  geom_timeline_label(nmax = 10, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) +
+  guides(size = guide_legend(title = "Richter scale value"), fill = guide_colourbar(title = "# Deaths")) +
+  theme_quakes()
+```
+
+
+
+## Plotting as a map
+
+Finally, the cleaned data can be filtered and plotted as a map, as per the below:
+
+
+```{r}
+cleanData %>% dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>%
+ dplyr::mutate(popup_text = eq_create_label(.)) %>% eq_map(annot_col = "popup_text")
+```

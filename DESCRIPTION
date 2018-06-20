@@ -1,0 +1,13 @@
+Package: MRMCapstone
+Title: Earthquake Display Tools
+Version: 1.0
+Authors@R: person("Matthew", "MacLeod", email = "Matthew.MacLeod3@forces.gc.ca", role = c("aut", "cre"))
+Description: Takes earthquake data from the NOAA significant earthquake database (https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1), lightly cleans it, and allows for various plots on both a timeline and a geographical view.
+Depends: R (>= 3.4.2)
+License: CC0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
