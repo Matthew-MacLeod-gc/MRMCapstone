@@ -3,7 +3,7 @@ Title: Earthquake Display Tools
 Version: 1.0
 Authors@R: person("Matthew", "MacLeod", email = "Matthew.MacLeod3@forces.gc.ca", role = c("aut", "cre"))
 Description: Takes earthquake data from the NOAA significant earthquake database (https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1), lightly cleans it, and allows for various plots on both a timeline and a geographical view.
-Depends: R (>= 3.4.2)
+Depends: R (>= 3.4.0)
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
