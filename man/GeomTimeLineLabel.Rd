@@ -8,17 +8,6 @@
 \usage{
 GeomTimeLineLabel
 }
-\arguments{
-\item{required_aes}{The aesthetics that must be specified for this visualization, including minimum and maximum years (x values), and a maximum number of earthquakes to label.}
-
-\item{default_aes}{The default values for this visualization, including a shape that takes a fill colour, and a 0.5 alpha transparency.}
-
-\item{draw_key}{The function with which to draw the legend}
-
-\item{draw_panel}{The function which primarily implements drawing the visualization.}
-
-\item{setup_data}{Pre-cleans the data, including filtering for the minimum and maximum value.}
-}
 \value{
 Returns a grid grob containing the earthquake labels as a layer
 }
@@ -27,7 +16,9 @@ Function that implements a class to label earthquake data, as
 described in function \code{\link{geom_timeline}}.
 }
 \examples{
-\dontrun{  ggplot2::layer(geom = GeomTimeLineLabel, mapping = mapping, data = data, stat = stat, position = position, show.legend = show.legend, inherit.aes = inherit.aes, params = list(na.rm = na.rm, nmax = nmax, xmin = xmin, xmax = xmax, ...))}
+\dontrun{  ggplot2::layer(geom = GeomTimeLineLabel, mapping = mapping, data = data,
+stat = stat, position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+params = list(na.rm = na.rm, nmax = nmax, xmin = xmin, xmax = xmax, ...))}
 
 }
 \keyword{datasets}

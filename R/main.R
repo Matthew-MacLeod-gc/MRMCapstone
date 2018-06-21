@@ -6,7 +6,7 @@ library("grid")
 library("ggplot2")
 library("readr")
 library("leaflet")
-
+library("lazyeval")
 
 
 #' Theme for an earthquake timeline
@@ -18,7 +18,10 @@ library("leaflet")
 #'
 #' @examples
 #' \dontrun{
-#'   cleanData %>% ggplot(aes(x = DATE, size=EQ_PRIMARY, fill = DEATHS, label = LOCATION_NAME)) + geom_timeline(alpha = 0.25, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) + guides(size = guide_legend(title = "Richter scale value"), fill = guide_colourbar(title = "# Deaths")) + theme_quakes()
+#'   cleanData %>% ggplot(aes(x = DATE, size=EQ_PRIMARY, fill = DEATHS, label = LOCATION_NAME)) +
+#'   geom_timeline(alpha = 0.25, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) +
+#'   guides(size = guide_legend(title = "Richter scale value"),
+#'   fill = guide_colourbar(title = "# Deaths")) + theme_quakes()
 #' }
 #'
 #'
@@ -77,9 +80,18 @@ eq_location_clean <- function(locationName){
 #'
 #' @export
 eq_clean_data <- function(df) {
-  df %>% tidyr::unite(DATE, YEAR, MONTH, DAY) %>% dplyr::mutate(DATE= lubridate::ymd(DATE, quiet=TRUE), LATITUDE = as.numeric(LATITUDE),
-    LONGITUDE = as.numeric(LONGITUDE)) %>% dplyr::mutate(LOCATION_NAME = eq_location_clean(LOCATION_NAME))
+  #df %>% tidyr::unite(DATE, YEAR, MONTH, DAY) %>% dplyr::mutate(DATE= lubridate::ymd(DATE, quiet=TRUE), LATITUDE = as.numeric(LATITUDE),
+   # LONGITUDE = as.numeric(LONGITUDE)) %>% dplyr::mutate(LOCATION_NAME = eq_location_clean(LOCATION_NAME))
 
+  temp <- df
+
+  temp$DATE <- paste(temp$YEAR, temp$MONTH, temp$DAY, sep="_")
+  temp$DATE <- lubridate::ymd(temp$DATE, quiet=TRUE)
+  temp$LATITUDE <- as.numeric(temp$LATITUDE)
+  temp$LONGITUDE <- as.numeric(temp$LONGITUDE)
+  temp$LOCATION_NAME <- eq_location_clean(temp$LOCATION_NAME)
+
+  temp
 }
 
 
@@ -90,15 +102,12 @@ eq_clean_data <- function(df) {
 #' described in function \code{\link{geom_timeline}}.
 #'
 #'
-#' @param required_aes The aesthetics that must be specified for this visualization, including minimum and maximum years (x values).
-#' @param default_aes The default values for this visualization, including a shape that takes a fill colour, and a 0.5 alpha transparency.
-#' @param draw_key The function with which to draw the legend
-#' @param draw_panel The function which primarily implements drawing the visualization.
-#' @param setup_data Pre-cleans the data, including filtering for the minimum and maximum value.
 #'
 #' @return Returns a grid grob containing the earthquake timeline as a layer
 #' @examples
-#' \dontrun{  ggplot2::layer(geom = GeomTimeLine, mapping = mapping, data = data, stat = stat, position = position, show.legend = show.legend, inherit.aes = inherit.aes, params = list(na.rm = na.rm, nmax = nmax, xmin = xmin, xmax = xmax, ...))}
+#' \dontrun{  ggplot2::layer(geom = GeomTimeLine, mapping = mapping, data = data, stat = stat,
+#' position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+#'  params = list(na.rm = na.rm, nmax = nmax, xmin = xmin, xmax = xmax, ...))}
 GeomTimeLine <- ggplot2::ggproto("GeomTimeLine", Geom,
                    required_aes = c("x", "xmin", "xmax"),
                    default_aes = aes(y = 0, shape = 21, size = 0.5, stroke = 1, colour = "grey20", fill = "grey20",
@@ -158,10 +167,14 @@ GeomTimeLine <- ggplot2::ggproto("GeomTimeLine", Geom,
 #' @param na.rm If FALSE, the default, missing values are removed with a warning. If TRUE, missing values are silently removed.
 #' @param show.legend logical. Should this layer be included in the legends? NA, the default, includes if any aesthetics are mapped. FALSE never includes, and TRUE always includes.
 #' @param inherit.aes If FALSE, overrides the default aesthetics, rather than combining with them. This is most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the default plot specification, e.g. borders.
+#' @param ... Other arguments passed on to layer.
 #'
 #' @examples
 #' \dontrun{
-#'   cleanData %>% ggplot(aes(x = DATE, size=EQ_PRIMARY, fill = DEATHS, label = LOCATION_NAME)) + geom_timeline(alpha = 0.25, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) + guides(size = guide_legend(title = "Richter scale value"), fill = guide_colourbar(title = "# Deaths")) + theme_quakes()
+#'   cleanData %>% ggplot(aes(x = DATE, size=EQ_PRIMARY, fill = DEATHS, label = LOCATION_NAME)) +
+#'   geom_timeline(alpha = 0.25, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) +
+#'   guides(size = guide_legend(title = "Richter scale value"),
+#'   fill = guide_colourbar(title = "# Deaths")) + theme_quakes()
 #' }
 #'
 #'
@@ -183,15 +196,11 @@ geom_timeline <- function(mapping = NULL, data = NULL, stat = "identity",
 #' described in function \code{\link{geom_timeline}}.
 #'
 #'
-#' @param required_aes The aesthetics that must be specified for this visualization, including minimum and maximum years (x values), and a maximum number of earthquakes to label.
-#' @param default_aes The default values for this visualization, including a shape that takes a fill colour, and a 0.5 alpha transparency.
-#' @param draw_key The function with which to draw the legend
-#' @param draw_panel The function which primarily implements drawing the visualization.
-#' @param setup_data Pre-cleans the data, including filtering for the minimum and maximum value.
-#'
 #' @return Returns a grid grob containing the earthquake labels as a layer
 #' @examples
-#' \dontrun{  ggplot2::layer(geom = GeomTimeLineLabel, mapping = mapping, data = data, stat = stat, position = position, show.legend = show.legend, inherit.aes = inherit.aes, params = list(na.rm = na.rm, nmax = nmax, xmin = xmin, xmax = xmax, ...))}
+#' \dontrun{  ggplot2::layer(geom = GeomTimeLineLabel, mapping = mapping, data = data,
+#' stat = stat, position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+#' params = list(na.rm = na.rm, nmax = nmax, xmin = xmin, xmax = xmax, ...))}
 #'
 #' @importFrom dplyr %>%
 #'
@@ -265,10 +274,15 @@ GeomTimeLineLabel <- ggproto("GeomTimeLineLabel", Geom,
 #' @param na.rm If FALSE, the default, missing values are removed with a warning. If TRUE, missing values are silently removed.
 #' @param show.legend logical. Should this layer be included in the legends? NA, the default, includes if any aesthetics are mapped. FALSE never includes, and TRUE always includes.
 #' @param inherit.aes If FALSE, overrides the default aesthetics, rather than combining with them. This is most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the default plot specification, e.g. borders.
+#'@param ... Other arguments passed on to layer.
 #'
 #' @examples
 #' \dontrun{
-#'   cleanData %>% ggplot(aes(x = DATE, size=EQ_PRIMARY, fill = DEATHS, label = LOCATION_NAME)) + geom_timeline(alpha = 0.25, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) + geom_timeline_label(nmax = 10, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) + guides(size = guide_legend(title = "Richter scale value"), fill = guide_colourbar(title = "# Deaths")) + theme_quakes()
+#'   cleanData %>% ggplot(aes(x = DATE, size=EQ_PRIMARY, fill = DEATHS, label = LOCATION_NAME)) +
+#'   geom_timeline(alpha = 0.25, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) +
+#'   geom_timeline_label(nmax = 10, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) +
+#'   guides(size = guide_legend(title = "Richter scale value"),
+#'   fill = guide_colourbar(title = "# Deaths")) + theme_quakes()
 #' }
 #'
 #'
@@ -298,7 +312,8 @@ geom_timeline_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #'
 #' @examples
 #' \dontrun{
-#'   cleanData %>% dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% eq_map(annot_col = "DATE")
+#'   cleanData %>% dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>%
+#'    eq_map(annot_col = "DATE")
 #' }
 #'
 #' @importFrom dplyr %>%
@@ -322,7 +337,8 @@ eq_map <- function (df, annot_col) {
 #'
 #' @examples
 #' \dontrun{
-#'   cleanData %>% dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% dplyr::mutate(popup_text = eq_create_label(.)) %>% eq_map(annot_col = "popup_text")
+#'   cleanData %>% dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>%
+#'    dplyr::mutate(popup_text = eq_create_label(.)) %>% eq_map(annot_col = "popup_text")
 #' }
 #'
 #' @export

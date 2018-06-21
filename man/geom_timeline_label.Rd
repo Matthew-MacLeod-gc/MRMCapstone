@@ -28,6 +28,8 @@ geom_timeline_label(mapping = NULL, data = NULL, stat = "identity",
 \item{xmin}{The earliest date to display}
 
 \item{xmax}{The latest date to display}
+
+\item{...}{Other arguments passed on to layer.}
 }
 \description{
 This function creates a visualization layer for labelling earthquakes
@@ -35,7 +37,11 @@ plotted on a timeline using \code{\link{geom_timeline}}.
 }
 \examples{
 \dontrun{
-  cleanData \%>\% ggplot(aes(x = DATE, size=EQ_PRIMARY, fill = DEATHS, label = LOCATION_NAME)) + geom_timeline(alpha = 0.25, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) + geom_timeline_label(nmax = 10, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) + guides(size = guide_legend(title = "Richter scale value"), fill = guide_colourbar(title = "# Deaths")) + theme_quakes()
+  cleanData \%>\% ggplot(aes(x = DATE, size=EQ_PRIMARY, fill = DEATHS, label = LOCATION_NAME)) +
+  geom_timeline(alpha = 0.25, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) +
+  geom_timeline_label(nmax = 10, xmin = ymd('2000-01-01'), xmax = ymd('2015-12-31')) +
+  guides(size = guide_legend(title = "Richter scale value"),
+  fill = guide_colourbar(title = "# Deaths")) + theme_quakes()
 }
 
 

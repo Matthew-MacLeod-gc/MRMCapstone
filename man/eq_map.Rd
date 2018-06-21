@@ -21,7 +21,8 @@ a pop up label containing the information in the specified column.
 }
 \examples{
 \dontrun{
-  cleanData \%>\% dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) \%>\% eq_map(annot_col = "DATE")
+  cleanData \%>\% dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) \%>\%
+   eq_map(annot_col = "DATE")
 }
 
 }

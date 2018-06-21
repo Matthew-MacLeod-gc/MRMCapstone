@@ -8,7 +8,7 @@ The goal of MRMCapstone is to create visualizations of earthquake data, in fulfi
 Example
 -------
 
-It's basic use is as follows:
+Its basic use is as follows:
 
 ``` r
 cleanData <- read_tsv("signif.txt") %>% eq_clean_data()
