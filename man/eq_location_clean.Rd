@@ -17,6 +17,6 @@ Cleans up a passed location string to remove the initial country
 name and colon, and convert to title case.
 }
 \examples{
-hello_world(locationName = "UNITED KINGDOM: CHANNEL ISLANDS; GAUL")
+eq_location_clean(locationName = "UNITED KINGDOM: CHANNEL ISLANDS; GAUL")
 
 }

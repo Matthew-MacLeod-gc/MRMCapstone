@@ -6,7 +6,7 @@ library("grid")
 library("ggplot2")
 library("readr")
 library("leaflet")
-library("magrittr")
+
 
 
 #' Theme for an earthquake timeline
@@ -51,7 +51,7 @@ theme_quakes <- function() {
 #' @return A location name in title case, without the country name.
 #'
 #' @examples
-#' hello_world(locationName = "UNITED KINGDOM: CHANNEL ISLANDS; GAUL")
+#' eq_location_clean(locationName = "UNITED KINGDOM: CHANNEL ISLANDS; GAUL")
 #'
 #' @importFrom dplyr %>%
 #'
