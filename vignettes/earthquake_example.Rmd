@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r global_options}
+```{r global_options, include = FALSE}
 knitr::opts_chunk$set(eval = FALSE)
 ```
 

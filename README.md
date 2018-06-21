@@ -1,6 +1,8 @@
 MRMCapstone
 ===========
 
+[![Travis-CI Build Status](https://travis-ci.org/macleod199/MRMCapstone.svg?branch=master)](https://travis-ci.org/macleod199/MRMCapstone)
+
 The goal of MRMCapstone is to create visualizations of earthquake data, in fulfillment of the Mastering Software Development in R Capstone project.
 
 Example

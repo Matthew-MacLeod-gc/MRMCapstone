@@ -29,12 +29,12 @@ theme_quakes <- function() {
     ggplot2::theme(
       # legend.key       = element_rect(fill = "white", colour = NA),
       legend.position = "bottom",
-      panel.grid.minor.x = element_blank(),
-      panel.grid.major.x = element_blank(),
-      axis.line.y = element_blank(),
-      axis.title.y = element_blank(),
-      axis.line.x = element_line(),
-      axis.ticks.x = element_line(),
+      panel.grid.minor.x = ggplot2::element_blank(),
+      panel.grid.major.x = ggplot2::element_blank(),
+      axis.line.y = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.line.x = ggplot2::element_line(),
+      axis.ticks.x = ggplot2::element_line(),
 
       complete = FALSE
     )
@@ -77,7 +77,7 @@ eq_location_clean <- function(locationName){
 #'
 #' @export
 eq_clean_data <- function(df) {
-  df %>% tidyr::unite(DATE, YEAR, MONTH, DAY) %>% dplyr::mutate(DATE= ymd(DATE, quiet=TRUE), LATITUDE = as.numeric(LATITUDE),
+  df %>% tidyr::unite(DATE, YEAR, MONTH, DAY) %>% dplyr::mutate(DATE= lubridate::ymd(DATE, quiet=TRUE), LATITUDE = as.numeric(LATITUDE),
     LONGITUDE = as.numeric(LONGITUDE)) %>% dplyr::mutate(LOCATION_NAME = eq_location_clean(LOCATION_NAME))
 
 }
@@ -258,6 +258,7 @@ GeomTimeLineLabel <- ggproto("GeomTimeLineLabel", Geom,
 #' @param mapping Set of aesthetic mappings created by aes or aes_. Must include 'x' values as dates. Deaths can be supplied as 'fill', and intensity as 'size.'  'y' can be used for a grouping variable.
 #' @param xmin The earliest date to display
 #' @param xmax The latest date to display
+#' @param nmax The maximum number of earthquakes to label
 #' @param data The data to be displayed in this layer. Must be earthquake data as specified above.
 #' @param stat The statistical transformation to use on the data for this layer, as a string.
 #' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function.
@@ -319,6 +320,7 @@ eq_map <- function (df, annot_col) {
 #'
 #' @return An HTML formatted text string.
 #'
+#' @examples
 #' \dontrun{
 #'   cleanData %>% dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% dplyr::mutate(popup_text = eq_create_label(.)) %>% eq_map(annot_col = "popup_text")
 #' }

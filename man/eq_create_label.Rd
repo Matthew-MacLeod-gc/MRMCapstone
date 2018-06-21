@@ -11,13 +11,15 @@ eq_create_label(df)
 }
 \value{
 An HTML formatted text string.
-
-\dontrun{
-  cleanData %>% dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% dplyr::mutate(popup_text = eq_create_label(.)) %>% eq_map(annot_col = "popup_text")
-}
 }
 \description{
 Takes a data frame containing earthquake data, and creates an informative HTML
 label to be used on a leaflet map, containing magnitude, death toll, and location
 information.
+}
+\examples{
+\dontrun{
+  cleanData \%>\% dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) \%>\% dplyr::mutate(popup_text = eq_create_label(.)) \%>\% eq_map(annot_col = "popup_text")
+}
+
 }

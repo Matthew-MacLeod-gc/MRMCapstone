@@ -23,6 +23,8 @@ geom_timeline_label(mapping = NULL, data = NULL, stat = "identity",
 
 \item{inherit.aes}{If FALSE, overrides the default aesthetics, rather than combining with them. This is most useful for helper functions that define both data and aesthetics and shouldn't inherit behaviour from the default plot specification, e.g. borders.}
 
+\item{nmax}{The maximum number of earthquakes to label}
+
 \item{xmin}{The earliest date to display}
 
 \item{xmax}{The latest date to display}
